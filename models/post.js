@@ -27,4 +27,4 @@ const PostSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Gym-website-dummy", PostSchema);
+module.exports = mongoose.model("GymWebsiteDummy", PostSchema);
