@@ -45,7 +45,7 @@ app.post("/", async (req, res) => {
       if (savedPost) {
         res.sendStatus(200);
       } else {
-        res.sendStatus(500);
+        res.sendStatus(400);
       }
     } else {
       res.sendStatus(401);
