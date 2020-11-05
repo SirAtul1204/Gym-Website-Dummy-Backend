@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send("Working as its supposed to be");
+  res.send("Working!");
 });
 
 mongoose.connect(
