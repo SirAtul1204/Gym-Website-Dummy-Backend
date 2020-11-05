@@ -42,16 +42,13 @@ app.post("/", async (req, res) => {
 
       let post = new Post(data);
       let savedPost = await post.save();
-      if (savedPost) {
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(400);
-      }
+      // console.log(savedPost);
+      res.sendStatus(200);
     } else {
       res.sendStatus(401);
     }
   } catch (e) {
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 });
 
