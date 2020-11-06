@@ -28,7 +28,7 @@ const PostSchema = mongoose.Schema({
 
   gender: {
     type: String,
-    require: true,
+    required: true,
   },
 });
 

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Post = require("./models/post");
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const cors = require("cors");
 
 require("dotenv/config");
 
@@ -15,6 +16,7 @@ class apiKeyError extends Error {
   }
 }
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -60,6 +62,7 @@ app.post("/", async (req, res) => {
       res.sendStatus(401);
     }
   } catch (e) {
+    console.log(e);
     if (e instanceof apiKeyError) {
       res.sendStatus(403);
       res.send;
