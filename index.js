@@ -8,6 +8,13 @@ require("dotenv/config");
 
 const app = express();
 
+class apiKeyError extends Error {
+  constructor(msg) {
+    super();
+    this.errorMessage = msg;
+  }
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -24,6 +31,10 @@ mongoose.connect(
 
 app.post("/", async (req, res) => {
   try {
+    const API_KEY = req.body.API_KEY;
+    if (API_KEY != process.env.API_KEY) {
+      throw new apiKeyError("You are not authorized!");
+    }
     let url = process.env.GOOGLE_RECAPTCHA_VERIFY;
 
     url += req.body.captchaResponse;
@@ -48,7 +59,12 @@ app.post("/", async (req, res) => {
       res.sendStatus(401);
     }
   } catch (e) {
-    res.sendStatus(400);
+    if (e instanceof apiKeyError) {
+      res.sendStatus(403);
+      res.send;
+    } else {
+      res.sendStatus(400);
+    }
   }
 });
 
