@@ -49,6 +49,7 @@ app.post("/", async (req, res) => {
         height: req.body.height,
         weight: req.body.weight,
         phoneNumber: req.body.phoneNumber,
+        gender: req.body.gender,
       };
 
       let post = new Post(data);
