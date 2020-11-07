@@ -4,6 +4,7 @@ const Post = require("./models/post");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const cors = require("cors");
+const QRcode = require("easyqrcodejs-nodejs");
 
 require("dotenv/config");
 
@@ -21,6 +22,36 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("Working!");
+});
+
+app.get("/findByPhone", (req, res) => {
+  const API_KEY = req.body.API_KEY;
+  if (API_KEY !== process.env.API_KEY) {
+    res.send(401);
+  } else {
+    Post.find({ phoneNumber: req.body.phoneNumber }, (error, data) => {
+      if (error) {
+        res.sendStatus(404);
+      } else {
+        res.send(data[0]);
+      }
+    });
+  }
+});
+
+app.get("/findByEmail", (req, res) => {
+  const API_KEY = req.body.API_KEY;
+  if (API_KEY !== process.env.API_KEY) {
+    res.sendStatus(401);
+  } else {
+    Post.find({ email: req.body.email }, (error, data) => {
+      if (error) {
+        res.sendStatus(404);
+      } else {
+        res.send(data[0]);
+      }
+    });
+  }
 });
 
 mongoose.connect(
@@ -52,6 +83,7 @@ app.post("/", async (req, res) => {
         weight: req.body.weight,
         phoneNumber: req.body.phoneNumber,
         gender: req.body.gender,
+        email: req.body.email,
       };
 
       let post = new Post(data);
