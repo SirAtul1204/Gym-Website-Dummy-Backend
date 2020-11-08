@@ -18,6 +18,7 @@ class apiKeyError extends Error {
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("Working!");
@@ -91,9 +92,6 @@ app.post("/", async (req, res) => {
       let findRes = await axios.get(
         "https://gym-website-dummy-backend.herokuapp.com/findByPhone",
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
           params: {
             API_KEY: process.env.API_KEY,
             phoneNumber: req.body.phoneNumber,
@@ -101,18 +99,19 @@ app.post("/", async (req, res) => {
         }
       );
 
+      console.log(findRes);
+
       let mailerRes = await axios.post(
         "https://mailer-javascript.herokuapp.com/withQRcode",
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: {
-            id: req.body.id,
-            email: req.body.email,
-          },
+          id: findRes.data._id,
+          email: findRes.data.email,
         }
       );
+
+      if (mailerRes) {
+        console.log("Mailing Successful");
+      }
       res.sendStatus(200);
     } else {
       res.sendStatus(401);
