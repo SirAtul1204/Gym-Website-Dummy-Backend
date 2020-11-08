@@ -24,11 +24,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/findByPhone", (req, res) => {
-  const API_KEY = req.body.API_KEY;
+  const API_KEY = req.params.API_KEY;
   if (API_KEY !== process.env.API_KEY) {
     res.send(401);
   } else {
-    Post.find({ phoneNumber: req.body.phoneNumber }, (error, data) => {
+    Post.find({ phoneNumber: req.params.phoneNumber }, (error, data) => {
       if (error) {
         res.sendStatus(404);
       } else {
@@ -39,11 +39,11 @@ app.get("/findByPhone", (req, res) => {
 });
 
 app.get("/findByEmail", (req, res) => {
-  const API_KEY = req.body.API_KEY;
+  const API_KEY = req.params.API_KEY;
   if (API_KEY !== process.env.API_KEY) {
     res.sendStatus(401);
   } else {
-    Post.find({ email: req.body.email }, (error, data) => {
+    Post.find({ email: req.params.email }, (error, data) => {
       if (error) {
         res.sendStatus(404);
       } else {
@@ -91,16 +91,20 @@ app.post("/", async (req, res) => {
       let findRes = await axios.get(
         "https://gym-website-dummy-backend.herokuapp.com/findByPhone",
         {
-          API_KEY: process.env.API_KEY,
-          phoneNumber: req.body.phoneNumber,
+          params: {
+            API_KEY: process.env.API_KEY,
+            phoneNumber: req.body.phoneNumber,
+          },
         }
       );
 
       let mailerRes = await axios.post(
         "https://mailer-javascript.herokuapp.com/withQRcode",
         {
-          id: req.body.id,
-          email: req.body.email,
+          data: {
+            id: req.body.id,
+            email: req.body.email,
+          },
         }
       );
       res.sendStatus(200);
