@@ -4,7 +4,6 @@ const Post = require("./models/post");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const cors = require("cors");
-const QRcode = require("easyqrcodejs-nodejs");
 
 require("dotenv/config");
 
@@ -89,6 +88,25 @@ app.post("/", async (req, res) => {
       let post = new Post(data);
       let savedPost = await post.save();
       // console.log(savedPost);
+      let findRes = await axios.get(
+        "https://gym-website-dummy-backend.herokuapp.com/findByPhone",
+        {
+          data: {
+            API_KEY: process.env.API_KEY,
+            phoneNumber: req.body.phoneNumber,
+          },
+        }
+      );
+
+      let mailerRes = await axios.post(
+        "https://mailer-javascript.herokuapp.com/withQRcode",
+        {
+          data: {
+            id: req.body.id,
+            email: req.body.email,
+          },
+        }
+      );
       res.sendStatus(200);
     } else {
       res.sendStatus(401);
