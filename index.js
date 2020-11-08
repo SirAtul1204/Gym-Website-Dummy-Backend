@@ -106,6 +106,7 @@ app.post("/", async (req, res) => {
         {
           id: findRes.data._id,
           email: findRes.data.email,
+          API_KEY: process.env.MAILER_API_KEY,
         }
       );
 
