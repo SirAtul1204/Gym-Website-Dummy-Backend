@@ -24,10 +24,25 @@ app.get("/", (req, res) => {
   res.send("Working!");
 });
 
+app.get("/findByQR", (req, res) => {
+  const API_KEY = req.query.API_KEY;
+  if (API_KEY !== req.query.API_KEY) {
+    res.sendStatus(401);
+  } else {
+    Post.find({ _id: req.query.id }, (error, data) => {
+      if (error) {
+        res.sendStatus(404);
+      } else {
+        res.send(data[0]);
+      }
+    });
+  }
+});
+
 app.get("/findByPhone", (req, res) => {
   const API_KEY = req.query.API_KEY;
   if (API_KEY !== process.env.API_KEY) {
-    res.send(401);
+    res.sendStatus(401);
   } else {
     Post.find({ phoneNumber: req.query.phoneNumber }, (error, data) => {
       if (error) {
